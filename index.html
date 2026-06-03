@@ -1,31 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>AI Photo Enhancer</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>AI Photo Enhancer</h1>
+<h1>AI Photo Enhancer</h1>
 
-  <input type="file" id="imageInput" accept="image/*">
+<input type="file" id="imageInput" accept="image/*">
 
-  <br><br>
+<br><br>
 
-  <img id="preview" width="300" style="display:none;">
+<img id="preview" width="300">
 
-  <script>
-    document.getElementById('imageInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const img = document.getElementById('preview');
-          img.src = event.target.result;
-          img.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  </script>
-</body>
-</html>
+<br><br>
+
+<button id="enhanceBtn">Enhance Photo</button>
+
+<br><br>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const imageInput = document.getElementById("imageInput");
+const preview = document.getElementById("preview");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+imageInput.addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    preview.src = event.target.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("enhanceBtn").addEventListener("click", () => {
+  canvas.width = preview.naturalWidth;
+  canvas.height = preview.naturalHeight;
+
+  ctx.filter = "contrast(120%) brightness(110%) saturate(120%)";
+  ctx.drawImage(preview, 0, 0);
+
+  preview.src = canvas.toDataURL();
+});
+</script>
